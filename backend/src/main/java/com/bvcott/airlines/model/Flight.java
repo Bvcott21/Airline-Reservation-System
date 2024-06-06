@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -148,9 +149,19 @@ public class Flight {
 
 	@Override
 	public String toString() {
+		String seatsString = seats
+				.stream()
+				.map(Seat::getSeatNumber)
+				.collect(Collectors.joining(", "));
+		
+		String crewString = crew
+				.stream()
+				.map(CrewMember::getName)
+				.collect(Collectors.joining(", "));
+		
 		return "Flight [id=" + id + ", flightNumber=" + flightNumber + ", departureTime=" + departureTime
 				+ ", arrivalTime=" + arrivalTime + ", origin=" + origin.getName() + ", destination=" + destination.getName() + ", airline="
-				+ airline.getName() + ", seats=" + seats + ", crew=" + crew + "]";
+				+ airline.getName() + ", seats=" + seatsString + ", crew=" + crewString + "]";
 	}
 
 	

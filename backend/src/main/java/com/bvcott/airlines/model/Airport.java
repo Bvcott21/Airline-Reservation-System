@@ -3,6 +3,7 @@ package com.bvcott.airlines.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -109,8 +110,18 @@ public class Airport {
 
 	@Override
 	public String toString() {
+		String arrivalsString = this.arrivals
+				.stream()
+				.map(Flight::getFlightNumber)
+				.collect(Collectors.joining(", "));
+		
+		String departuresString = this.departures
+				.stream()
+				.map(Flight::getFlightNumber)
+				.collect(Collectors.joining(", "));
+		
 		return "Airport [id=" + id + ", code=" + code + ", name=" + name + ", location=" + location + ", departures="
-				+ departures + ", arrivals=" + arrivals + "]";
+				+ departuresString + ", arrivals=" + arrivalsString + "]";
 	}
 	
 	

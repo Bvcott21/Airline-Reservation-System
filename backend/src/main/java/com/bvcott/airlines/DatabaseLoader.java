@@ -90,8 +90,10 @@ public class DatabaseLoader {
 			
 			log.info("Persisted Airline {}", airline1);
 			log.info("Persisted Airline {}", airline2);
-			
-			
+			log.info("Persisted airport {}", airport1);
+			log.info("Persisted airport {}", airport2);	
+			log.info("Persisted Flights {}", flight1);
+			log.info("Persisted Flights {}", flight2);
 		};
 	}
 	
