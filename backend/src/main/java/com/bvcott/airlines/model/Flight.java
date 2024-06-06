@@ -54,23 +54,31 @@ public class Flight {
 	}
 	
 	public void addSeat(Seat seat) {
-		seats.add(seat);
+		if(!seats.contains(seat)) {
+			seat.setIsAvailable(false);
+			seats.add(seat);
+			seat.setFlight(this);
+		}
 	}
 	
 	public void removeSeat(Seat seat) {
 		if(seats.contains(seat)) {
+			seat.setIsAvailable(true);
 			seats.remove(seat);
+			seat.setFlight(null);
 		}
 	}
 	
 	public void addCrewMember(CrewMember crewMember) {
 		if(!crew.contains(crewMember)) {
+			crewMember.setFlight(this);
 			crew.add(crewMember);
 		}
 	}
 	
 	public void removeCrewMember(CrewMember crewMember) {
 		if(crew.contains(crewMember)) {
+			crewMember.setFlight(null);
 			crew.remove(crewMember);
 		}
 	}

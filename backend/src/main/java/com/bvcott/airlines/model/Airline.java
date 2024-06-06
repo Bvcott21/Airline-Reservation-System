@@ -35,6 +35,7 @@ public class Airline {
 	public void addFlight(Flight flight) {
 		if(!flights.contains(flight)) {
 			flights.add(flight);
+			flight.setAirline(this);
 		}	
 	}
 	

@@ -3,6 +3,7 @@ package com.bvcott.airlines.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -27,6 +28,20 @@ public class Passenger {
 		super();
 		this.name = name;
 		this.passportNumber = passportNumber;
+	}
+	
+	public void addBooking(Booking booking) {
+		if(!bookings.contains(booking)) {
+			bookings.add(booking);
+			booking.addPassenger(this);
+		}
+	}
+	
+	public void removeBooking(Booking booking) {
+		if(bookings.contains(booking)) {
+			bookings.remove(booking);
+			booking.removePassenger(this);
+		}
 	}
 
 	public UUID getId() {
@@ -63,8 +78,17 @@ public class Passenger {
 
 	@Override
 	public String toString() {
-		return "Passenger [id=" + id + ", name=" + name + ", passportNumber=" + passportNumber + "]";
+		String bookingsString = bookings
+				.stream()
+				.map(Booking::getId)
+				.map(UUID::toString)
+				.collect(Collectors.joining(", "));
+		
+				return "Passenger [id=" + id + ", name=" + name + ", passportNumber=" + passportNumber + ", bookings="
+				+ bookingsString + "]";
 	}
+
+	
 	
 	
 }
