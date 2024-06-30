@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.bvcott.airlines.model.Airline;
 import com.bvcott.airlines.model.Airport;
 import com.bvcott.airlines.model.Booking;
+import com.bvcott.airlines.model.CrewMember;
 import com.bvcott.airlines.model.Flight;
 import com.bvcott.airlines.model.Passenger;
 import com.bvcott.airlines.repository.AirlineRepository;
@@ -52,6 +53,18 @@ public class DatabaseLoader {
 			log.info("DATABASE PRELOAD: Creating Flights...");
 			Flight flight1 = new Flight("1223", LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(10).plusHours(3), airport1, airport2, airline1);
 			Flight flight2 = new Flight("4578", LocalDateTime.now().plusDays(5), LocalDateTime.now().plusDays(5).plusHours(2), airport2, airport1, airline2);
+			
+			log.info("DATABASE PRELOAD: Creating Crew Members...");
+			CrewMember crew1 = new CrewMember("Joe Pilot", "Pilot");
+			CrewMember crew2 = new CrewMember("Jane Attendant", "Flight Attendant");
+			CrewMember crew3 = new CrewMember("Mike Pilot", "Pilot");
+			CrewMember crew4 = new CrewMember("Lydia Attendant", "Flight Attendant");
+			
+			log.info("DATABASE PRELOAD: Associating Crew Members with Flights");
+			flight1.addCrewMember(crew1);
+			flight1.addCrewMember(crew2);
+			flight2.addCrewMember(crew3);
+			flight2.addCrewMember(crew4);
 			
 			log.info("DATABASE PRELOAD: Persisting Airlines...");
 			airline1 = airlineRepo.save(airline1);
