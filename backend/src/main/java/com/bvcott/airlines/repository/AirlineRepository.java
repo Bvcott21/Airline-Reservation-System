@@ -11,4 +11,5 @@ import com.bvcott.airlines.model.Airline;
 @Repository
 public interface AirlineRepository extends JpaRepository<Airline, UUID> {
 	Optional<Airline> findByName(String name);
+	Optional<Airline> findByCode(String code);
 }

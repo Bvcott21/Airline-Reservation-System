@@ -24,36 +24,85 @@ public class AirlineService {
 	}
 	
 	public Airline createAirline(Airline airline) {
-		log.debug("AirlineService: createAirline Method called, object received: {}", airline);
-		log.debug("AirlineService: Called Airline Repository's save method passing in: {}", airline);
-	
-		try {
-			return airlineRepo.save(airline);
-		} catch (DataIntegrityViolationException e) {
-			throw new AirlineAlreadyExistsException("Airline already exists with name: " + airline.getName());
+		log.debug("createAirline method called, object received: {}", airline);
+
+		if(airline.getName().isEmpty() || airline.getCode().isEmpty()) {
+			log.warn("Airline name or code is/are empty.");
+			throw new DataIntegrityViolationException("Fields cannot be empty.");
 		}
+	
+		Optional<Airline> nameMatcher = airlineRepo.findByName(airline.getName());
+		Optional<Airline> codeMatcher = airlineRepo.findByCode(airline.getCode());
+
+		if(nameMatcher.isPresent()) {
+			log.warn("Airline already exists by name: " + airline.getName());
+			throw new AirlineAlreadyExistsException("Airline already exists with name: " + airline.getName());
+		} else if(codeMatcher.isPresent()) {
+			log.warn("Airline already exists by code: " + airline.getCode());
+			throw new AirlineAlreadyExistsException("Airline already exists with code: " + airline.getCode());
+		} else {
+			return airlineRepo.save(airline);
+		}
+		
 	}
 
 	public List<Airline> retrieveAll() {
-		log.debug("AirlineService: retrieveAll method called.");
-		log.debug("AirlineService: called Airline Repository's findAll method.");
+		log.debug("retrieveAll method called.");
 		return airlineRepo.findAll();
 	}
 
 	public Airline retrieveById(UUID id) {
-		log.debug("AirlineService: retrieveById method called, ID received: {}", id);
+		log.debug("retrieveById method called, ID received: {}", id);
 		return airlineRepo
 				.findById(id)
 				.orElseThrow(() -> new AirlineNotFoundException("Airline not found with ID: " + id));
 	}
 
 	public void deleteById(UUID id) {
-		log.debug("AirlineService: deleteById method called, ID received: {}", id);
-		this.retrieveById(id);
-		log.debug("AirlineService: Airline found.");
-		log.debug("AirlineService: called Airline Repository's deleteById method.");
-		airlineRepo.deleteById(id);
-		
+		log.debug("deleteById method called, ID received: {}", id);
+		Optional<Airline> airlineFound = airlineRepo.findById(id);
+
+		if(airlineFound.isPresent()) {
+			airlineRepo.deleteById(id);
+		} else {
+			log.warn("Airline with ID: {} - NOT FOUND", id);
+			throw new AirlineNotFoundException("Couldn't delete airline with ID: " + id + " - NOT FOUND");
+		}
 	}	
+
+	public Airline updateAirline(UUID id, Airline airline) {
+		log.debug("updateAirline method called, object received: {}", airline);
+
+		Optional<Airline> existingAirlineOpt = airlineRepo.findById(id);
+
+		if(!existingAirlineOpt.isPresent()) {
+			log.warn("Airline with ID: {} - NOT FOUND", id);
+			throw new AirlineNotFoundException("Airline with ID:" + id + "not found.");
+		}
+
+		Airline existingAirline = existingAirlineOpt.get();
+
+		Optional<Airline> nameMatcher = airlineRepo.findByName(airline.getName());
+		Optional<Airline> codeMatcher = airlineRepo.findByCode(airline.getCode());
+
+		if(nameMatcher.isPresent()) {
+			log.warn("Airline with name {} already exists.", airline.getName());
+			throw new AirlineAlreadyExistsException("Airline with name: " + airline.getName() + " already exists.");
+		} 
+
+		if(codeMatcher.isPresent()) {
+			log.warn("Airline with code {} already exists.", airline.getCode());
+			throw new AirlineAlreadyExistsException("Airline with code: " + airline.getCode() + "already exsits.");
+		}
+
+		existingAirline.setName(airline.getName());
+		existingAirline.setCode(airline.getCode());
+
+		Airline savedAirline = airlineRepo.save(existingAirline);
+
+		log.debug("Airline udpated successfully, updated object: {}", savedAirline);
+		return savedAirline;
+		
+	}
 
 }

@@ -11,14 +11,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Airport {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 	
+	@NotEmpty
 	private String code;
-	private String name; 
+
+	@NotEmpty
+	private String name;
+	
+	@NotEmpty
 	private String location;
 	
 	@OneToMany(mappedBy = "origin", cascade = {CascadeType.MERGE, CascadeType.PERSIST})

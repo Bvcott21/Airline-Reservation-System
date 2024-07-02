@@ -12,13 +12,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Airline {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO) 
 	private UUID id;
 	
+	@NotEmpty
 	private String name;
+
+	@NotEmpty
 	private String code;
 	
 	@OneToMany(mappedBy = "airline", cascade = {CascadeType.MERGE, CascadeType.PERSIST}) 
