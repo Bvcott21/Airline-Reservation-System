@@ -8,13 +8,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class CrewMember {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 	
+	@NotEmpty
 	private String name;
+
+	@NotEmpty
 	private String role;
 	
 	@ManyToOne @JoinColumn(name = "flight_id")
