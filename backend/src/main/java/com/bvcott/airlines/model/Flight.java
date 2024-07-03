@@ -15,23 +15,30 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Flight {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO) 
 	private UUID id;
 	
+	@NotEmpty
 	private String flightNumber;
+
+	@NotNull
 	private LocalDateTime departureTime;
+
+	@NotNull
 	private LocalDateTime arrivalTime;
 	
-	@ManyToOne @JoinColumn(name = "origin_id") 
+	@ManyToOne @JoinColumn(name = "origin_id") @NotNull 
 	private Airport origin;
 	
-	@ManyToOne @JoinColumn(name = "destination_id") 
+	@ManyToOne @JoinColumn(name = "destination_id") @NotNull 
 	private Airport destination;
 	
-	@ManyToOne @JoinColumn(name = "airline_id")
+	@ManyToOne @JoinColumn(name = "airline_id") @NotNull
 	private Airline airline;
 	
 	@OneToMany(mappedBy = "flight", cascade = {CascadeType.MERGE, CascadeType.PERSIST}) 
